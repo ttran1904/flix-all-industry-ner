@@ -19,7 +19,7 @@ public class App
         // Read train data
         InputStreamFactory in = null;
         try {
-            in = new MarkableFileInputStreamFactory(new File("data/AnnotatedSentences.txt"));
+            in = new MarkableFileInputStreamFactory(new File("data/ner_new_0_edit.txt"));
         } catch (FileNotFoundException e2) { e2.printStackTrace(); }
 
         ObjectStream sampleStream = null;
@@ -36,7 +36,7 @@ public class App
         // Train model
         TokenNameFinderModel nameFinderModel = null;
         try {
-            nameFinderModel = NameFinderME.train("en", null, sampleStream,
+            nameFinderModel = NameFinderME.train("vn", null, sampleStream,
                     params, TokenNameFinderFactory.create(null, null, Collections.<String, Object>emptyMap(), new BioCodec()));
         } catch (IOException e) {
             e.printStackTrace();
@@ -44,7 +44,7 @@ public class App
 
         // saving the model to "ner-custom-model.bin" file
         try {
-            File output = new File("ner-custom-model.bin");
+            File output = new File("bin/ner-custom-model.bin");
             FileOutputStream outputStream = new FileOutputStream(output);
             nameFinderModel.serialize(outputStream);
 
@@ -53,7 +53,7 @@ public class App
         // testing the model and printing the types it found in the input sentence
         TokenNameFinder nameFinder = new NameFinderME(nameFinderModel);
 
-        String[] testSentence ={"Alisa","Fernandes","is","a","tourist","from","Spain"};
+        String[] testSentence ={"Thông_thường",  "phí" ,"thay", "chính_hãng", "cho", "iPhone", "hết",  "bảo_hành" };
 
         System.out.println("Finding types in the test sentence..");
         Span[] names = nameFinder.find(testSentence);
@@ -65,32 +65,4 @@ public class App
             System.out.println(name.getType()+" : "+personName+"\t [probability="+name.getProb()+"]");
         }
     }
-
-//    public static void main (String[] args) throws IOException{
-//        //Loading the NER - Person model
-//        //assert new File("./resources/Menu_de_itens.txt").canRead();
-//        InputStream inputStream = new FileInputStream("./data/AnnotatedSentences.txt");
-//        TokenNameFinderModel model = new TokenNameFinderModel(inputStream);
-//
-//        //Instantiating the NameFinder class
-//        NameFinderME nameFinder = new NameFinderME(model);
-//
-//        //Getting the sentence in the form of String array
-//        String [] sentence = new String[]{
-//                "Mike",
-//                "and",
-//                "Smith",
-//                "are",
-//                "good",
-//                "friends"
-//        };
-//
-//        //Finding the names in the sentence
-//        Span nameSpans[] = nameFinder.find(sentence);
-//
-//        //Printing the spans of the names in the sentence
-//        for(Span s: nameSpans)
-//            System.out.println(s.toString());
-//    }
-
 }

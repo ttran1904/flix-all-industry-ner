@@ -24,25 +24,27 @@ public class App
 
         ObjectStream sampleStream = null;
         try {
-            sampleStream = new NameSampleDataStream(
-                    new PlainTextByLineStream(in, StandardCharsets.UTF_8));
+            sampleStream = new NameSampleDataStream(new PlainTextByLineStream(in, StandardCharsets.UTF_8));
         } catch (IOException e1) { e1.printStackTrace(); }
 
         // Setting train parameters
+        System.out.println(">> Training parameters");
         TrainingParameters params = new TrainingParameters();
         params.put(TrainingParameters.ITERATIONS_PARAM, 70);
         params.put(TrainingParameters.CUTOFF_PARAM, 1);
 
         // Train model
+        System.out.println(">> Training model");
         TokenNameFinderModel nameFinderModel = null;
         try {
-            nameFinderModel = NameFinderME.train("vn", null, sampleStream,
+            nameFinderModel = NameFinderME.train("en", null, sampleStream,
                     params, TokenNameFinderFactory.create(null, null, Collections.<String, Object>emptyMap(), new BioCodec()));
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // saving the model to "ner-custom-model.bin" file
+        System.out.println(">> Saving model to bin");
         try {
             File output = new File("bin/ner-custom-model.bin");
             FileOutputStream outputStream = new FileOutputStream(output);
@@ -50,10 +52,13 @@ public class App
 
         } catch (FileNotFoundException e) { e.printStackTrace(); } catch (IOException e) { e.printStackTrace(); }
 
+
+
         // testing the model and printing the types it found in the input sentence
+        System.out.println(">> Starting namefinder");
         TokenNameFinder nameFinder = new NameFinderME(nameFinderModel);
 
-        String[] testSentence ={"Thông_thường",  "phí" ,"thay", "chính_hãng", "cho", "iPhone", "hết",  "bảo_hành" };
+        String[] testSentence = {"Thông_thường",  "phí" ,"thay", "chính_hãng", "cho", "iPhone", "hết",  "bảo_hành" };
 
         System.out.println("Finding types in the test sentence..");
         Span[] names = nameFinder.find(testSentence);

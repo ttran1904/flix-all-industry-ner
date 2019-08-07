@@ -39,7 +39,7 @@ public class AppTest
 //        // ...
 //
 //        //Write to file
-//        PrintStream outputPrinter = new PrintStream("output.txt");
+//        PrintStream outputPrinter = new PrintStream("bin/output.txt");
 //        pipeline.printToFile(annotation, outputPrinter);
 //
 //        // You can also get a single sentence to analyze individually
